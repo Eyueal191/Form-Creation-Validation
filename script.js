@@ -2,13 +2,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("registration-form");
   const feedbackDiv = document.getElementById("form-feedback");
 
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", function (event) {
     event.preventDefault();
 
+    // Retrieve and trim input values
     const username = document.getElementById("username").value.trim();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
 
+    // Initialize validation
     let isValid = true;
     const messages = [];
 
@@ -18,33 +20,32 @@ document.addEventListener("DOMContentLoaded", () => {
       messages.push("Username must be at least 3 characters long.");
     }
 
-    // Email validation using regex
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    // Email validation
+    if (!email.includes("@") || !email.includes(".")) {
       isValid = false;
       messages.push("Please enter a valid email address.");
     }
 
-    // Password validation: min 8 characters, at least 1 number
-    if (password.length < 8 || !/\d/.test(password)) {
+    // Password validation
+    if (password.length < 8) {
       isValid = false;
-      messages.push(
-        "Password must be at least 8 characters long and include a number."
-      );
+      messages.push("Password must be at least 8 characters long.");
     }
 
+    // Display feedback
     feedbackDiv.style.display = "block";
-
     if (isValid) {
       feedbackDiv.textContent = "Registration successful!";
       feedbackDiv.style.color = "#28a745";
-
-      // Save to localStorage (optional but useful)
-      localStorage.setItem("username", username);
-      localStorage.setItem("email", email);
+      feedbackDiv.style.backgroundColor = "#d4edda";
+      localStorage.setItem(
+        "registeredUser",
+        JSON.stringify({ username, email })
+      );
     } else {
       feedbackDiv.innerHTML = messages.join("<br>");
-      feedbackDiv.style.color = "#dc3545";
+      feedbackDiv.style.color = "#d8000c";
+      feedbackDiv.style.backgroundColor = "#ffbaba";
     }
   });
 });
